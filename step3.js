@@ -35,7 +35,7 @@ addFile();
 
 async function addFile(){
   if(process.argv.includes("--out")){
-    let data = process.argv[4].startsWith("http") ? await webCat(process.argv[4]): await cat(process.argv[4]);
+    let data = process.argv[4].startsWith("http") ? await webCat(process.argv[4]): await cat(process.argv[4]); // process.argv[4] should be a variable!
     writeCat(process.argv[3], data);
   }else{
     choose(process.argv[2]);
