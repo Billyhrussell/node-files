@@ -9,6 +9,7 @@ async function cat(path){
   try{
     let contents = await fsP.readFile(path, "utf8");
     console.log("contents", contents);
+    return contents;
   } catch(err){
     console.log(err);
     process.exit(1);
@@ -18,21 +19,15 @@ async function cat(path){
 async function webCat(path){
   try{
     const data = await axios({url: path});
-    //console.log("data ", data);
-    return data;
+    console.log("data ", data);
+    return data.data;
   }catch(err){
     console.log("this error: ", err);
     process.exit(1);
   }
 }
-// change argv to path
-function choose(path){
-  // if(path.includes(".txt")){
-  //   cat(path);
-  // }else if(path.startsWith("http")){
-  //   webCat(path);
-  // }
 
+function choose(path){
   path.startsWith("http") ? webCat(path): cat(path);
 }
 
@@ -40,7 +35,8 @@ addFile();
 
 async function addFile(){
   if(process.argv.includes("--out")){
-    writeCat(process.argv[3], webCat(process.argv[4]));
+    let data = process.argv[4].startsWith("http") ? await webCat(process.argv[4]): await cat(process.argv[4]);
+    writeCat(process.argv[3], data);
   }else{
     choose(process.argv[2]);
   }
